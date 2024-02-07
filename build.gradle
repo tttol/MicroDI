@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'jakarta.inject:jakarta.inject-api:2.0.1'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+task run(type: JavaExec) {
+    main = 'Main'
+    classpath = sourceSets.main.runtimeClasspath
+}
