@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 public class Container {
     private static Logger logger = Logger.getLogger(Container.class.getName());
 
-    public static Map<String, Class<?>> classMap = new HashMap<>();
+    static Map<String, Class<?>> classMap = new HashMap<>();
 
     public static void register(Class<?> clazz) {
         classMap.put(clazz.getName(), clazz);

@@ -8,7 +8,7 @@ public class Main {
 
         Container.register(ClassA.class);
 
-        var classA = (ClassA) Container.getInstance("classA");
+        var classA = (ClassA) Container.getInstance(ClassA.class.getName());
         classA.print();
     }
 }
