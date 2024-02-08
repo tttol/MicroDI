@@ -1,17 +1,15 @@
-import di.Container;
-import module.ClassA;
-import module.ClassB;
-import module.ClassC;
+import di.FieldInjectionContainer;
+import module.field.ClassA;
+import module.field.ClassB;
+import module.field.ClassC;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, MicroDI!");
+        FieldInjectionContainer.register(ClassA.class);
+        FieldInjectionContainer.register(ClassB.class);
+        FieldInjectionContainer.register(ClassC.class);
 
-        Container.register(ClassA.class);
-        Container.register(ClassB.class);
-        Container.register(ClassC.class);
-
-        var classA = (ClassA) Container.getInstance(ClassA.class.getName());
+        var classA = (ClassA) FieldInjectionContainer.getInstance(ClassA.class.getName());
         classA.print();
     }
 }

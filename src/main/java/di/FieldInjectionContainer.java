@@ -7,7 +7,7 @@ import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Container {
+public class FieldInjectionContainer {
     static Map<String, Class<?>> classMap = new HashMap<>();
 
     public static void register(Class<?> clazz) {
@@ -27,7 +27,7 @@ public class Container {
 
     private static <T> T createObject(Class<T> type) {
         try {
-            log.info("Creating object of type %s".formatted(type.getName()));
+            log.info("[START]Creating object of type %s".formatted(type.getName()));
             T object = type.getDeclaredConstructor().newInstance();
             for (var field : type.getDeclaredFields()) {
                 if (!field.isAnnotationPresent(Inject.class)) {
@@ -43,6 +43,8 @@ public class Container {
         } catch (Exception e) {
             log.warn("Failed to createObject. message=%s, cause=%s".formatted(e.getMessage(), e.getCause()));
             return null;
+        } finally {
+            log.info("[END  ]Creating object of type %s".formatted(type.getName()));
         }
     }
 }
