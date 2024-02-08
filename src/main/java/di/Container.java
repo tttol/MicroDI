@@ -20,7 +20,7 @@ public class Container {
             // return classMap.get(className).getDeclaredConstructor().newInstance();
             return createObject(classMap.get(className));
         } catch (Exception e) {
-            log.warn("Failed to getInstance. message=%s, cause=%s".formatted(e.getCause(), e.getMessage()));
+            log.warn("Failed to getInstance. message=%s, cause=%s".formatted(e.getMessage(), e.getCause()));
             return null;
         }
     }
@@ -31,7 +31,7 @@ public class Container {
             T object = type.getDeclaredConstructor().newInstance();
             for (var field : type.getDeclaredFields()) {
                 if (!field.isAnnotationPresent(Inject.class)) {
-                    log.info("Skip injecting %s. %sField %s is not annotated with @Inject.".formatted(field.getName()));
+                    log.info("Skip injecting %s. Field %s is not annotated with @Inject.".formatted(field.getName(), field.getName()));
                     continue;
                 }
                 field.setAccessible(true);
@@ -41,7 +41,7 @@ public class Container {
             }
             return object;
         } catch (Exception e) {
-            log.warn("Failed to createObject. message=%s, cause=%s".formatted(e.getCause(), e.getMessage()));
+            log.warn("Failed to createObject. message=%s, cause=%s".formatted(e.getMessage(), e.getCause()));
             return null;
         }
     }
