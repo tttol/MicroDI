@@ -35,7 +35,7 @@ public class Container {
                     continue;
                 }
                 field.setAccessible(true);
-                field.set(object, getInstance(field.getName()));
+                field.set(object, getInstance(field.getType().getName()));
 
                 log.info("Injected %s into %s".formatted(field.getName(), type.getName()));
             }
