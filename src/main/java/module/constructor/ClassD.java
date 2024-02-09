@@ -1,12 +1,15 @@
 package module.constructor;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
+// @RequiredArgsConstructor
 public class ClassD {
     ClassE classE;
+
+    public ClassD(ClassE classE) {
+        this.classE = classE;
+    }
 
     public void print() {
         log.info("ClassD is called!");

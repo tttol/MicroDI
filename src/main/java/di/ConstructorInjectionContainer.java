@@ -18,14 +18,14 @@ public class ConstructorInjectionContainer {
         try {
             return createInstance(classMap.get(className));
         } catch (Exception e) {
-            log.warn("Failed to getInstance. message=%s, cause=%s".formatted(e.getMessage(), e.getCause()));
+            log.warn("Failed to getInstance. message={}, cause={}", e.getMessage(), e.getCause());
             return null;
         }
     }
 
     private static <T> T createInstance(Class<T> clazz) {
         try {
-            log.info("[START]Creating instance of type %s".formatted(clazz.getName()));
+            log.info("[START]Creating instance of type {}", clazz.getName());
             for (var constructor : clazz.getConstructors()) {
                 if (constructor.getParameterCount() == 0) {
                     log.debug("Skip default constructor");
@@ -33,16 +33,16 @@ public class ConstructorInjectionContainer {
                 }
 
                 for (var param : constructor.getParameters()) {
-                    log.info("Injecting %s into %s".formatted(param.getName(), clazz.getName()));
+                    log.info("Injecting {} into {}", param.getName(), clazz.getName());
                     getInstance(param.getType().getName());
                 }
             }
             return clazz.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
-            log.warn("Failed to createInstance. message=%s, cause=%s".formatted(e.getMessage(), e.getCause()));
+            log.warn("Failed to createInstance", e);
             return null;
         } finally {
-            log.info("[END  ]Creating instance of type %s".formatted(clazz.getName()));
+            log.info("[END  ]Creating instance of type {}", clazz.getName());
         }
     }
 }
