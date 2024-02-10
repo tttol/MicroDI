@@ -1,20 +1,28 @@
 package di;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ConstructorInjectionContainer {
     static Map<String, Class<?>> classMap = new HashMap<>();
+    static Map<String, Constructor<?>> constructorMap = new HashMap<>();
 
     public static void register(Class<?> clazz) {
         classMap.put(clazz.getName(), clazz);
+
+        Stream.of(clazz.getConstructors())
+            .filter(constructor -> constructor.getParameterCount() > 0) //デフォルトコンストラクタを除外
+            .forEach(nullableConstructor -> {
+                constructorMap.put(clazz.getName(), nullableConstructor);
+            });
     }
 
     public static Object getInstance(String className) {
-        // classnameを元にclassMapからクラスを取得し、そのクラスのインスタンスを返す
         try {
             return createInstance(classMap.get(className));
         } catch (Exception e) {
@@ -23,26 +31,18 @@ public class ConstructorInjectionContainer {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private static <T> T createInstance(Class<T> clazz) {
         try {
-            log.info("[START]Creating instance of type {}", clazz.getName());
-            for (var constructor : clazz.getConstructors()) {
-                if (constructor.getParameterCount() == 0) {
-                    log.debug("Skip default constructor");
-                    continue;
-                }
-
-                for (var param : constructor.getParameters()) {
-                    log.info("Injecting {} into {}", param.getName(), clazz.getName());
-                    getInstance(param.getType().getName());
-                }
-            }
-            return clazz.getDeclaredConstructor().newInstance();
+            var constructor = constructorMap.get(clazz.getName()) != null ? constructorMap.get(clazz.getName()) : clazz.getDeclaredConstructor();
+            return (T) constructor
+                .newInstance(Stream.of(constructor.getParameterTypes())
+                    .map(parameterType -> getInstance(parameterType.getName()))
+                    .toArray()
+                );
         } catch (Exception e) {
             log.warn("Failed to createInstance", e);
             return null;
-        } finally {
-            log.info("[END  ]Creating instance of type {}", clazz.getName());
         }
     }
 }

@@ -15,20 +15,18 @@ public class FieldInjectionContainer {
     }
 
     public static Object getInstance(String className) {
-        // classnameを元にclassMapからクラスを取得し、そのクラスのインスタンスを返す
         try {
-            // return classMap.get(className).getDeclaredConstructor().newInstance();
-            return createObject(classMap.get(className));
+            return createInstance(classMap.get(className));
         } catch (Exception e) {
             log.warn("Failed to getInstance", e);
             return null;
         }
     }
 
-    private static <T> T createObject(Class<T> clazz) {
+    private static <T> T createInstance(Class<T> clazz) {
         try {
             log.info("[START]Creating object of type {}", clazz.getName());
-            T object = clazz.getDeclaredConstructor().newInstance();
+            T instance = clazz.getDeclaredConstructor().newInstance();
             for (var field : clazz.getDeclaredFields()) {
                 if (!field.isAnnotationPresent(Inject.class)) {
                     log.info("Skip injecting {}. Field {} is not annotated with @Inject.", field.getName(), field.getName());
@@ -36,11 +34,11 @@ public class FieldInjectionContainer {
                 }
 
                 field.setAccessible(true);
-                field.set(object, getInstance(field.getType().getName())); //getInstanceを再帰的に呼び出す
+                field.set(instance, getInstance(field.getType().getName())); //getInstanceを再帰的に呼び出す
 
                 log.info("Injected {} into {}", field.getName(), clazz.getName());
             }
-            return object;
+            return instance;
         } catch (Exception e) {
             log.warn("Failed to createObject.", e);
             return null;
