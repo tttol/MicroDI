@@ -9,12 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ConstructorInjectionContainer {
-    static Map<String, Class<?>> classMap = new HashMap<>();
     static Map<String, Constructor<?>> constructorMap = new HashMap<>();
 
     public static void register(Class<?> clazz) {
-        classMap.put(clazz.getName(), clazz);
-
         Stream.of(clazz.getConstructors())
             .filter(constructor -> constructor.getParameterCount() > 0) //デフォルトコンストラクタを除外
             .forEach(nullableConstructor -> {
@@ -22,9 +19,9 @@ public class ConstructorInjectionContainer {
             });
     }
 
-    public static Object getInstance(String className) {
+    public static Object getInstance(Class<?> clazz) {
         try {
-            return createInstance(classMap.get(className));
+            return createInstance(clazz);
         } catch (Exception e) {
             log.warn("Failed to getInstance. message={}, cause={}", e.getMessage(), e.getCause());
             return null;
@@ -37,7 +34,7 @@ public class ConstructorInjectionContainer {
             var constructor = constructorMap.get(clazz.getName()) != null ? constructorMap.get(clazz.getName()) : clazz.getDeclaredConstructor();
             return (T) constructor
                 .newInstance(Stream.of(constructor.getParameterTypes())
-                    .map(parameterType -> getInstance(parameterType.getName()))
+                    .map(parameterType -> getInstance(parameterType))
                     .toArray()
                 );
         } catch (Exception e) {

@@ -20,7 +20,7 @@ public class Main {
         ConstructorInjectionContainer.register(ClassE.class);
         ConstructorInjectionContainer.register(ClassF.class);
 
-        var classD = (ClassD) ConstructorInjectionContainer.getInstance(ClassD.class.getName());
+        var classD = (ClassD) ConstructorInjectionContainer.getInstance(ClassD.class);
         classD.print();
     }
 }
