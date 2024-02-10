@@ -1,22 +1,13 @@
 package di;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FieldInjectionContainer {
-    static Map<String, Class<?>> classMap = new HashMap<>();
-
-    public static void register(Class<?> clazz) {
-        classMap.put(clazz.getName(), clazz);
-    }
-
-    public static Object getInstance(String className) {
+    public static Object getInstance(Class<?> clazz) {
         try {
-            return createInstance(classMap.get(className));
+            return createInstance(clazz);
         } catch (Exception e) {
             log.warn("Failed to getInstance", e);
             return null;
@@ -34,7 +25,7 @@ public class FieldInjectionContainer {
                 }
 
                 field.setAccessible(true);
-                field.set(instance, getInstance(field.getType().getName())); //getInstanceを再帰的に呼び出す
+                field.set(instance, getInstance(field.getType())); //getInstanceを再帰的に呼び出す
 
                 log.info("Injected {} into {}", field.getName(), clazz.getName());
             }
