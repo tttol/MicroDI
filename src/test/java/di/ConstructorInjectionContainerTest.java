@@ -16,7 +16,7 @@ class ConstructorInjectionContainerTest {
     @DisplayName("コンストラクタインジェクションでインスタンスを取得できることを確認するテスト")
     void testGetInstance() {
         ConstructorInjectionContainer.register(ClassD.class);
-        ConstructorInjectionContainer.register(ClassE.class);
+        // ConstructorInjectionContainer.register(ClassE.class);
         
         var classD = ConstructorInjectionContainer.getInstance(ClassD.class);
         var classE = ConstructorInjectionContainer.getInstance(ClassE.class);
