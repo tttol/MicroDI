@@ -23,7 +23,7 @@ public class ConstructorInjectionContainer {
         try {
             return createInstance(clazz);
         } catch (Exception e) {
-            log.warn("Failed to getInstance. message={}, cause={}", e.getMessage(), e.getCause());
+            log.warn("Failed to getInstance.", e);
             return null;
         }
     }
